@@ -8,5 +8,8 @@ node_modules/
 # Local-only: build plan and editor/agent settings
 BuildSpec.md
 MAINTAINER.md
+HANDOFF.md
 .claude/
-
+demo/
+*.mp4
+*.mov

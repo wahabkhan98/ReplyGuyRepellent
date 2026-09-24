@@ -4,6 +4,8 @@ Hides low-effort replies on X so you only see the real ones.
 
 Every viral post ends the same way: 300 replies, 40 of them worth reading. This stamps the rest.
 
+![Reply Guy Repellent demo](docs/demo.gif)
+
 ## How it works
 
 Two passes, so it feels instant and stays cheap.
