@@ -1,0 +1,13 @@
+{
+  "name": "reply-guy-repellent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that collapses generic, low-effort replies under X posts.",
+  "scripts": {
+    "test": "node --test test/scorer.test.js test/proxy.test.js test/score-proxy.test.js",
+    "serve": "node test/serve.js",
+    "e2e": "node test/e2e.js",
+    "icons": "node scripts/make-icons.js",
+    "zip": "sh scripts/build-zip.sh"
+  }
+}

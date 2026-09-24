@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Reply Guy Repellent",
+  "version": "0.1.0",
+  "description": "Collapses generic, low-effort replies under X posts so the real ones stay visible.",
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*",
+    "https://REPLACE-ME.vercel.app/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*",
+        "http://localhost:8123/*"
+      ],
+      "js": ["selectors.js", "scorer-keywords.js", "content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

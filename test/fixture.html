@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fixture · Reply Guy Repellent</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin: 0; background: #fff; color: #0f1419; font: 15px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  body.dim { background: rgb(21, 32, 43); color: #f7f9f9; }
+  body.dark { background: #000; color: #e7e9ea; }
+  main { max-width: 600px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  body { --line: #eff3f4; --muted: #536471; }
+  body.dim { --line: #38444d; --muted: #8b98a5; }
+  body.dark { --line: #2f3336; --muted: #71767b; }
+  .toolbar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px; background: inherit; border-bottom: 1px solid var(--line); }
+  .toolbar button { font: inherit; font-size: 13px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+  [data-testid="cellInnerDiv"] { border-bottom: 1px solid var(--line); }
+  article { display: block; padding: 12px 16px; cursor: pointer; outline: none; }
+  article:hover { background: rgba(127, 127, 127, 0.04); }
+  .row { display: flex; gap: 12px; }
+  .avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; }
+  .body { min-width: 0; flex: 1; }
+  [data-testid="User-Name"] { color: var(--muted); }
+  [data-testid="User-Name"] b { color: inherit; filter: brightness(0.2); }
+  body.dim [data-testid="User-Name"] b, body.dark [data-testid="User-Name"] b { filter: brightness(3); }
+  [data-testid="User-Name"] a { color: inherit; text-decoration: none; }
+  [data-testid="tweetText"] { margin-top: 2px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  [data-testid="tweetText"] img { width: 1.1em; height: 1.1em; vertical-align: -0.15em; }
+  .focal [data-testid="tweetText"] { font-size: 19px; margin-top: 10px; }
+  .media { margin-top: 10px; height: 180px; border-radius: 16px; background: linear-gradient(135deg, #8ec5fc, #e0c3fc); }
+  .actions { display: flex; gap: 48px; margin-top: 10px; color: var(--muted); font-size: 13px; }
+  .ad { font-size: 12px; color: var(--muted); }
+  #toast { position: fixed; left: 16px; bottom: 16px; padding: 8px 12px; border-radius: 8px; background: #0f1419; color: #fff; font-size: 13px; opacity: 0; transition: opacity 200ms; }
+  #toast.on { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="react-root">
+  <main>
+    <div class="toolbar">
+      <button id="more">+ Load 10 more</button>
+      <button id="rerender">Re-render nodes</button>
+      <button id="recycle">Recycle nodes</button>
+      <button data-theme="">Light</button>
+      <button data-theme="dim">Dim</button>
+      <button data-theme="dark">Dark</button>
+    </div>
+    <section aria-label="Conversation" id="timeline"></section>
+  </main>
+</div>
+<div id="toast"></div>
+
+<script>
+  // kind: "bot" should collapse, "real" should stay. Content mirrors what shows up under viral founder posts.
+  const PARENT = { id: '1836999999999999999', name: 'Dana Ruiz', handle: 'danaruiz', text: 'What is the one thing you would do differently growing a B2B tool without sales?' };
+  const POST = { id: '1837000000000000000', name: 'Sam Okafor', handle: 'samokafor', text: "Here's everything I learned growing a B2B tool to $1M ARR with no sales team 🧵" };
+  const AD = { name: 'GrowthCourse', handle: 'growthcourse', text: 'Scale to 7 figures with our course 🔥🔥🔥', ad: true };
+
+  const FIRST = [
+    ['bot', 'Great insight! 🔥'],
+    ['real', 'We tried this at my last startup and churn dropped from 9% to 4% in two quarters.'],
+    ['bot', 'So true, thanks for sharing'],
+    ['bot', '<img alt="🔥" src="data:,"><img alt="🔥" src="data:,"><img alt="🔥" src="data:,">'],
+    ['real', 'How did you handle the migration without taking the API down?'],
+    ['bot', 'This is gold 💯'],
+    ['bot', 'Well said!'],
+    ['ad'],
+    ['real', "Counterpoint: the hiring advice only works if you already have a network. Most first-time founders don't, so the cold outreach part matters way more than this suggests."],
+    ['bot', "Couldn't agree more."],
+    ['bot', 'Spot on 👏'],
+    ['real', 'Wrote up our version of this here: https://example.com/blog/onboarding'],
+    ['bot', 'This is the way'],
+    ['real', 'The part about `feature flags` is underrated, we ship everything behind them now'],
+    ['bot', 'Facts.'],
+    ['image'],
+    ['bot', '100%'],
+    ['real', 'Honestly the onboarding checklist idea is what fixed activation for our team last spring'],
+    ['bot', 'Needed this today, thanks!'],
+    ['bot', 'This really resonates with me, thank you'],
+    ['real', 'Disagree on the pricing bit. Annual plans hurt us early because nobody trusted a brand new tool with a full year up front.'],
+    ['bot', 'Great post, very insightful'],
+    ['bot', 'Game changer 🚀'],
+    ['real', 'Love this, but it breaks down once you have more than one product line and shared infra'],
+    ['bot', 'Bookmarked!'],
+    ['real', 'Is there a source for the retention stat you mentioned?'],
+    ['bot', 'Absolutely!'],
+    ['bot', '👆👆'],
+    ['real', 'My cofounder sent me this exact thread yesterday after a rough board meeting'],
+    ['bot', 'Such a powerful message for everyone'],
+    ['real', 'Great post. The bit about writing the changelog before the code changed how our team plans sprints entirely.'],
+    ['bot', 'Wow'],
+  ];
+
+  const MORE = [
+    ['bot', 'So true 🙏'],
+    ['real', 'We did the opposite and it worked, but only because our buyers were engineers who hated sales calls.'],
+    ['bot', 'Thanks for sharing!'],
+    ['bot', 'This 👆'],
+    ['real', 'What would you change if the team was fully remote from day one?'],
+    ['bot', 'Saving this'],
+    ['real', "Tried it for 3 weeks. The weekly demo ritual stuck, the rest didn't."],
+    ['bot', 'Very insightful'],
+    ['real', 'The retention curve screenshot would make this a lot more convincing honestly'],
+    ['bot', 'Needed this'],
+  ];
+
+  const NAMES = ['Priya N', 'Leo Brandt', 'growth_guru', 'Mia Chen', 'Tomás R', 'founder.eth', 'Aisha K', 'Ben Carter', 'hustle daily', 'Noor A', 'Kenji M', 'Ola S'];
+  let nextId = 1837000000000000001n;
+  const all = []; // every rendered item, in order
+  let adCount = 0;
+
+  function makeItem([kind, html]) {
+    if (kind === 'ad') return { ...AD, kind: 'ad', key: `ad${adCount++}` };
+    const id = String(nextId++);
+    const name = NAMES[Number(BigInt(id) % BigInt(NAMES.length))];
+    const handle = name.toLowerCase().replace(/[^a-z0-9_]/g, '');
+    return { id, name, handle, kind, html: kind === 'image' ? '' : html, key: id };
+  }
+
+  function avatarColor(seed) {
+    let h = 0;
+    for (const c of seed) h = (h * 31 + c.charCodeAt(0)) % 360;
+    return `hsl(${h} 55% 60%)`;
+  }
+
+  function articleInner(item, focal) {
+    const time = item.ad ? '' : ` · <a href="/${item.handle}/status/${item.id}"><time datetime="2026-09-21T12:00:00Z">2h</time></a>`;
+    const text = item.kind === 'image' ? '' : `<div data-testid="tweetText" lang="en"><span>${item.html ?? item.text}</span></div>`;
+    return `<div class="row">
+        <div class="avatar" style="background:${avatarColor(item.handle)}"></div>
+        <div class="body">
+          <div data-testid="User-Name"><b>${item.name}</b> @${item.handle}${time}${item.ad ? ' <span class="ad">· Ad</span>' : ''}</div>
+          ${text}
+          ${item.kind === 'image' ? '<div class="media"></div>' : ''}
+          <div class="actions"><span>💬 ${focal ? 412 : 3}</span><span>🔁 ${focal ? 1204 : 1}</span><span>♥ ${focal ? '9.1K' : 12}</span></div>
+        </div>
+      </div>`;
+  }
+
+  function cell(item, focal) {
+    const c = document.createElement('div');
+    c.dataset.testid = 'cellInnerDiv';
+    const a = document.createElement('article');
+    a.dataset.testid = 'tweet';
+    a.tabIndex = 0;
+    a.setAttribute('role', 'article');
+    if (focal) a.classList.add('focal');
+    if (item.kind) a.dataset.kind = item.kind;
+    a.innerHTML = articleInner(item, focal);
+    // Stand-in for X opening the reply when you click it.
+    a.addEventListener('click', () => toast(`X would open ${item.id || 'the ad'}`));
+    c.appendChild(a);
+    return c;
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('on'), 1200);
+    window.__opened = (window.__opened || 0) + 1;
+  }
+
+  const timeline = document.getElementById('timeline');
+  function renderAll() {
+    timeline.replaceChildren(cell(PARENT), cell(POST, true), ...all.map((i) => cell(i)));
+  }
+
+  all.push(...FIRST.map(makeItem));
+  renderAll();
+
+  document.getElementById('more').onclick = () => {
+    for (const row of MORE) {
+      const item = makeItem(row);
+      all.push(item);
+      timeline.appendChild(cell(item));
+    }
+  };
+  // Fresh nodes for the same replies: what X does when you scroll away and back.
+  document.getElementById('rerender').onclick = renderAll;
+  // Same nodes, different replies inside: X's virtual list reusing article elements.
+  document.getElementById('recycle').onclick = () => {
+    const articles = [...timeline.querySelectorAll('article:not(.focal)')].slice(1);
+    const items = all.slice();
+    items.push(items.shift());
+    articles.forEach((a, i) => { a.innerHTML = articleInner(items[i]); a.dataset.kind = items[i].kind; });
+    all.push(all.shift());
+  };
+  for (const b of document.querySelectorAll('[data-theme]')) {
+    b.onclick = () => { document.body.className = b.dataset.theme; };
+  }
+
+  // ?standalone runs the extension in-page with a fake chrome.*, no install needed.
+  if (new URLSearchParams(location.search).has('standalone')) {
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = '/extension/styles.css';
+    document.head.appendChild(css);
+    const load = (src) => new Promise((r) => { const s = document.createElement('script'); s.src = src; s.onload = r; document.body.appendChild(s); });
+    load('/test/chrome-shim.js')
+      .then(() => load('/extension/selectors.js'))
+      .then(() => load('/extension/scorer-keywords.js'))
+      .then(() => load('/extension/content.js'));
+  }
+</script>
+</body>
+</html>

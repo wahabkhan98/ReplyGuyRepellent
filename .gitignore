@@ -1,0 +1,12 @@
+node_modules/
+.vercel/
+.env*
+!.env.example
+*.zip
+.DS_Store
+
+# Local-only: build plan and editor/agent settings
+BuildSpec.md
+MAINTAINER.md
+.claude/
+
