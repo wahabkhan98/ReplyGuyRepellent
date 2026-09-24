@@ -21,7 +21,7 @@ No X API, no login, no scraping. The extension only reads the page already open 
 
 ## Install
 
-> **Install manually for now:** The extension is not in the Chrome Web Store yet (review in progress). Follow these steps to install it directly:
+> **Install manually for now:** Follow these steps to install it directly:
 
 1. Download the latest zip from [Releases](../../releases) and unzip it.
 2. Open `chrome://extensions` and turn on **Developer mode**, top right.
