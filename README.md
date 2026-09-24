@@ -21,7 +21,7 @@ No X API, no login, no scraping. The extension only reads the page already open 
 
 ## Install
 
-Not on the Chrome Web Store yet (review takes a few days). Until then:
+> **Install manually for now:** The extension is not in the Chrome Web Store yet (review in progress). Follow these steps to install it directly:
 
 1. Download the latest zip from [Releases](../../releases) and unzip it.
 2. Open `chrome://extensions` and turn on **Developer mode**, top right.
@@ -29,6 +29,7 @@ Not on the Chrome Web Store yet (review takes a few days). Until then:
 4. Open any post on x.com. It runs on reply threads.
 
 Works in Chrome, Edge, Brave, and Arc.
+
 
 ## Settings
 
@@ -109,9 +110,10 @@ Jev scores 0–2, where 0 is "specific and engaged with the post" and 2 is "coul
 ## Development
 
 ```bash
-git clone https://github.com/USERNAME/reply-guy-repellent
-cd reply-guy-repellent
+git clone https://github.com/wahabkhan98/ReplyGuyRepellent
+cd ReplyGuyRepellent
 ```
+
 
 No build step. Plain JavaScript, Manifest V3.
 
